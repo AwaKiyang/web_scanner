@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VulneraSCan Dashboard</title>
+  <style>
+    * {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: #0e0c1d;
+  color: #fff;
+  line-height: 1.6;
+}
+
+header {
+  background: #141229;
+  color: #fff;
+  padding: 1rem 2rem;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 1000;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+}
+
+header h1 {
+  color: #9c6dfc;
+  font-weight: bold;
+  font-size: 1.6rem;
+}
+
+nav a {
+  color: #c3b8ff;
+  margin-left: 1.5rem;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+nav a:hover {
+  color: #ffffff;
+}
+
+main {
+  margin-top: 100px;
+  padding: 2rem;
+}
+
+h2 {
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+  background: linear-gradient(to right, #f44ec8, #7b61ff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.card {
+  background: #1a1830;
+  padding: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  transition: transform 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.btn-primary {
+  background: linear-gradient(to right, #7b61ff, #9c6dfc);
+  color: white;
+  padding: 0.7rem 1.4rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(to right, #9c6dfc, #7b61ff);
+}
+
+footer {
+  text-align: center;
+  padding: 1.5rem;
+  margin-top: 3rem;
+  background: #141229;
+  color: #999;
+}
+
+.form-section {
+  background: #1a1830;
+  padding: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  margin-bottom: 2rem;
+}
+
+.form-section input,
+.form-section select,
+.form-section button {
+  display: block;
+  width: 100%;
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
+  padding: 0.7rem;
+  border-radius: 6px;
+  border: none;
+}
+
+.form-section input,
+.form-section select {
+  background: #26233f;
+  color: white;
+}
+
+.log-box {
+  background: #111;
+  padding: 1rem;
+  border: 1px solid #333;
+  border-radius: 6px;
+  height: 150px;
+  overflow-y: auto;
+  font-size: 0.9rem;
+}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>VulneraSCan</h1>
+  <nav>
+  <a href="{{ url_for('schedule') }}">Scheduled Scans</a>
+  <a href="{{ url_for('history') }}">History</a>
+  <a href="{{ url_for('auth.logout') }}">Logout</a>
+</nav>
+  </header>
+
+  <main>
+    <section id="dashboard">
+      <h2>Welcome, User</h2>
+      <div class="card-grid">
+        <div class="card">
+          <h3>Total Scans</h3>
+          <p>25</p>
+        </div>
+        <div class="card">
+          <h3>Last Scan Result</h3>
+          <p>No vulnerabilities found</p>
+        </div>
+        <div class="card">
+          <h3>Next Scheduled Scan</h3>
+          <p>2025-05-24 10:00</p>
+        </div>
+      </div>
+      <button class="btn-primary">Start New Scan</button>
+    </section>
+
+    <section id="manual">
+      <h2>Manual Scan</h2>
+      <div class="form-section">
+        <label for="target">Target URL/IP:</label>
+        <input id="target" type="text" placeholder="Enter IP or URL" />
+
+        <label for="type">Scan Type:</label>
+        <select id="type">
+          <option>Port Scan</option>
+          <option>SQL Injection</option>
+          <option>XSS</option>
+        </select>
+
+        <button onclick="startScan()" class="btn-primary">Start Scan</button>
+
+        <div id="log" class="log-box">
+          <p>Waiting to start scan...</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 VulneraSCan v1.0</p>
+  </footer>
+
+  <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+  <script>
+    const socket = io();
+
+    function startScan() {
+      const target = document.getElementById("target").value;
+      const type = document.getElementById("type").value;
+      document.getElementById("log").innerHTML = "";
+      socket.emit("start_scan", { target, type });
+    }
+
+    socket.on("scan_update", function (data) {
+      const log = document.getElementById("log");
+      const line = document.createElement("p");
+      line.textContent = data.msg;
+      log.appendChild(line);
+      log.scrollTop = log.scrollHeight;
+    });
+  </script>
+</body>
+</html>

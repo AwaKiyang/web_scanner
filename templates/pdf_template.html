@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Scan Report</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 700px;
+      margin: 2rem auto;
+      padding: 1rem 2rem;
+      background: #fff;
+      color: #333;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 1rem;
+      color: #007bff;
+    }
+    strong {
+      color: #555;
+    }
+    pre {
+      background: #f4f4f4;
+      border: 1px solid #ccc;
+      padding: 1rem;
+      border-radius: 6px;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+    p {
+      margin: 0.4rem 0;
+    }
+    h2 {
+      margin-top: 1.5rem;
+      border-bottom: 2px solid #007bff;
+      padding-bottom: 0.3rem;
+      color: #007bff;
+    }
+  </style>
+</head>
+<body>
+  <h1>Scan Report</h1>
+
+  <p><strong>Target:</strong> {{ target }}</p>
+  <p><strong>Scan Type:</strong> {{ scan_type }}</p>
+  <p><strong>Timestamp:</strong> {{ timestamp }}</p>
+
+  <h2>Results:</h2>
+  <pre>{{ result }}</pre>
+
+  <script>
+    // Auto trigger print dialog on page load (optional)
+    window.onload = function() {
+      window.print();
+    }
+  </script>
+</body>
+</html>

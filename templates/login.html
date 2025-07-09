@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login | VulneraSCan</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+            * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(145deg, #0e0c1d, #1a1830);
+            color: #fff;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 1s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .login-container {
+            background: #141229;
+            padding: 2.5rem;
+            border-radius: 16px;
+            box-shadow: 0 0 20px rgba(156, 109, 252, 0.3);
+            width: 100%;
+            max-width: 420px;
+            transition: transform 0.3s ease;
+        }
+
+        .login-container h2 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            font-size: 28px;
+            color: #9c6dfc; /* pastel purple */
+        }
+
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            margin-bottom: 1rem;
+            border: none;
+            border-radius: 8px;
+            background-color: #26233f; /* dark muted purple/blue-gray */
+            color: #fff;
+            font-size: 14px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        input[type="text"]:focus, input[type="password"]:focus {
+            outline: none;
+            transform: scale(1.02);
+            box-shadow: 0 0 0 2px #9c6dfc; /* pastel purple focus */
+        }
+
+        input::placeholder {
+            color: #c3b8ff; /* light lavender */
+        }
+
+        button {
+            width: 100%;
+            padding: 0.75rem;
+            background: linear-gradient(to right, #7b61ff, #9c6dfc); /* purple gradient */
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+        }
+
+        button:hover {
+            background: linear-gradient(to right, #9c6dfc, #7b61ff);
+            transform: scale(1.02);
+        }
+
+        .register-link {
+            margin-top: 1.5rem;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .register-link a {
+            color: #c3b8ff; /* light lavender */
+            text-decoration: none;
+        }
+
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+
+        .error {
+            color: #ff4d4d;
+            background: rgba(255, 77, 77, 0.1);
+            border: 1px solid #ff4d4d;
+            border-radius: 8px;
+            padding: 0.5rem;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 1.5rem;
+                border-radius: 12px;
+            }
+
+            .login-container h2 {
+                font-size: 24px;
+            }
+
+            input[type="text"], input[type="password"], button {
+                font-size: 16px;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h2>Penetration Scanner</h2>
+
+            {% if error %}
+            <div class="error">{{ error }}</div>
+            {% endif %}
+
+        <form method="POST">
+            <input type="text" name="username" placeholder="Username" required>
+            <input type="password" name="password" placeholder="Password" required>
+            <button type="submit">Login</button>
+        </form>
+
+        <div class="register-link">
+            <p>Don't have an account? <a href="{{ url_for('auth.register') }}">Register</a></p>
+        </div>
+    </div>
+</body>
+</html>
