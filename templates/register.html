@@ -193,10 +193,11 @@
         usernameError.textContent = 'Username is required.';
         return false;
       }
-      if (val.length < 4) {
-        usernameError.textContent = 'Minimum 4 characters.';
+      if (val.length < 6) {
+        usernameError.textContent = 'Minimum 6 characters.';
         return false;
       }
+
       if (val.length > 20) {
         usernameError.textContent = 'Max 20 characters allowed.';
         return false;
@@ -206,15 +207,40 @@
     }
 
     function validatePassword() {
+      
+        const upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        const lower = "abcdefghijklmnopqrstuvwxyz";
+        const numbers = "0123456789";
+        const punc = `!"#$%&'()*+,-./:;<=>?@[\\]^_\`{|}~`;
+        
+        let upcount = 0;
+        let locount = 0;
+        let numcount = 0;
+        let puncount = 0;
+
       const val = passwordInput.value;
+      for (let i = 0; i < val.length; i++) {
+          const char = val[i];
+          if (upper.includes(char)) upcount++;
+          if (lower.includes(char)) locount++;
+          if (numbers.includes(char)) numcount++;
+          if (punc.includes(char)) puncount++;
+      }
+      console.log(`uppercase: ${upcount}, lowercase: ${locount}, numbers: ${numcount}, punctuations: ${puncount}`);
+
       if (!val) {
         passwordError.textContent = 'Password is required.';
         return false;
       }
-      if (val.length < 6) {
-        passwordError.textContent = 'At least 6 characters.';
+      if (upcount < 3 || locount < 3 || numcount < 3 || puncount < 3) {
+        passwordError.textContent = 'Medium password — include at least 3 of each: uppercase, lowercase, numbers, and special characters';
+        return false
+      }
+      if (val.length < 12) {
+        passwordError.textContent = 'At least 12 characters.';
         return false;
       }
+      
       passwordError.textContent = '';
       return true;
     }

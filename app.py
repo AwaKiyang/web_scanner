@@ -182,7 +182,7 @@ def schedule():
             return "❌ Scheduled time must be in the future."
 
         save_scheduled_scan(session['user_id'], target, scan_type, run_datetime)
-        return "✅ Scan scheduled successfully."
+        return render_template('index.html')
 
     conn = get_db_connection()
     c = conn.cursor()

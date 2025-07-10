@@ -56,9 +56,7 @@ def scan_dom_xss(url):
     try:
         resp = requests.get(url, headers=HEADERS, timeout=5)
         scripts = re.findall(r"<script[^>]*>(.*?)</script>", resp.text, re.DOTALL | re.IGNORECASE)
-        vulnerable = False
 
-        # Look for vulnerable patterns (e.g., document.location, document.URL, eval, innerHTML usage)
         patterns = [
             r"document\.location",
             r"document\.URL",
@@ -71,10 +69,11 @@ def scan_dom_xss(url):
         for script in scripts:
             for pattern in patterns:
                 if re.search(pattern, script):
-                    results.append(f"⚠️ Possible DOM-based XSS vulnerability pattern found: '{pattern}' in script block.")
-                    vulnerable = True
+                    results.append(
+                        f"⚠️ Possible DOM-based XSS vulnerability pattern found: '{pattern}' in script block."
+                    )
 
-        if not vulnerable:
+        if not results:
             results.append("No obvious DOM-based XSS patterns detected.")
 
     except requests.RequestException as e:
@@ -84,22 +83,21 @@ def scan_dom_xss(url):
 
 def scan_stored_xss(test_injection_url, stored_page_url):
     """
-    Simulate stored XSS by injecting payload into a POST form or URL (test_injection_url),
-    then fetching a page where the payload might be stored (stored_page_url).
-    This is just a stub — adapt to your app's specifics.
+    Simulate stored XSS by injecting payload into a form or URL,
+    then checking the display page to confirm persistence.
     """
     results = []
+
     for payload in PAYLOADS:
         try:
-            # For demo, do a GET with payload (replace with POST as needed)
             inj_url = f"{test_injection_url}?comment={payload}"
             inj_resp = requests.get(inj_url, headers=HEADERS, timeout=5)
-            # Then fetch stored page
             stored_resp = requests.get(stored_page_url, headers=HEADERS, timeout=5)
 
             if is_reflected(stored_resp.text, payload):
-                results.append(f"❗ Possible stored XSS detected with payload: {payload}")
-                break
+                results.append(f"Possible stored XSS detected with payload: {payload}")
+                break  # stop after finding the first success
+
         except requests.RequestException as e:
             results.append(f"❌ Error during stored XSS test: {e}")
             break
